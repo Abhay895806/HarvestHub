@@ -1,0 +1,104 @@
+<div class="container">
+
+  <h1>Crop Plan Management</h1>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Crop Plan' : 'Add Crop Plan' }}</h2>
+
+    <input
+      type="text"
+      placeholder="Field Name"
+      [(ngModel)]="cropPlan.fieldName"
+    >
+
+    <input
+      type="text"
+      placeholder="Crop Name"
+      [(ngModel)]="cropPlan.cropName"
+    >
+
+    <label>Sowing Date</label>
+    <input
+      type="date"
+      [(ngModel)]="cropPlan.sowingDate"
+    >
+
+    <label>Expected Harvest Date</label>
+    <input
+      type="date"
+      [(ngModel)]="cropPlan.expectedHarvestDate"
+    >
+
+    <input
+      type="text"
+      placeholder="Status"
+      [(ngModel)]="cropPlan.status"
+    >
+
+    <button (click)="save()">
+      {{ editing ? 'Update' : 'Add Crop Plan' }}
+    </button>
+
+    <button
+      *ngIf="editing"
+      class="cancel"
+      (click)="reset()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Crop Plans</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Field</th>
+          <th>Crop</th>
+          <th>Sowing Date</th>
+          <th>Expected Harvest</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let plan of cropPlans">
+
+          <td>{{ plan.id }}</td>
+          <td>{{ plan.fieldName }}</td>
+          <td>{{ plan.cropName }}</td>
+          <td>{{ plan.sowingDate }}</td>
+          <td>{{ plan.expectedHarvestDate }}</td>
+          <td>{{ plan.status }}</td>
+
+          <td>
+            <button (click)="edit(plan)">
+              Edit
+            </button>
+
+            <button
+              class="delete"
+              (click)="delete(plan.id)"
+            >
+              Delete
+            </button>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

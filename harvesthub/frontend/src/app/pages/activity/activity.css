@@ -1,0 +1,63 @@
+.container {
+  padding: 35px;
+}
+
+.container h1 {
+  color: #1b5e20;
+}
+
+.form-card,
+.table-card {
+  background: white;
+  padding: 25px;
+  margin-top: 25px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+input,
+textarea {
+  padding: 12px;
+  margin: 7px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+textarea {
+  width: 300px;
+  height: 80px;
+}
+
+button {
+  padding: 10px 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 5px;
+  background: #2e7d32;
+  color: white;
+  cursor: pointer;
+}
+
+.delete {
+  background: #c62828;
+}
+
+.cancel {
+  background: #757575;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background: #e8f5e9;
+}

@@ -1,0 +1,107 @@
+<div class="container">
+
+  <h1>Equipment Management</h1>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Equipment' : 'Add Equipment' }}</h2>
+
+    <input
+      type="text"
+      placeholder="Equipment Name"
+      [(ngModel)]="equipment.equipmentName"
+    >
+
+    <input
+      type="text"
+      placeholder="Equipment Type"
+      [(ngModel)]="equipment.equipmentType"
+    >
+
+    <input
+      type="text"
+      placeholder="Model"
+      [(ngModel)]="equipment.model"
+    >
+
+    <label>Purchase Date</label>
+
+    <input
+      type="date"
+      [(ngModel)]="equipment.purchaseDate"
+    >
+
+    <input
+      type="text"
+      placeholder="Status"
+      [(ngModel)]="equipment.status"
+    >
+
+    <button (click)="save()">
+      {{ editing ? 'Update Equipment' : 'Add Equipment' }}
+    </button>
+
+    <button
+      *ngIf="editing"
+      class="cancel"
+      (click)="reset()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Equipment List</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Equipment Name</th>
+          <th>Type</th>
+          <th>Model</th>
+          <th>Purchase Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of equipments">
+
+          <td>{{ item.id }}</td>
+          <td>{{ item.equipmentName }}</td>
+          <td>{{ item.equipmentType }}</td>
+          <td>{{ item.model }}</td>
+          <td>{{ item.purchaseDate }}</td>
+          <td>{{ item.status }}</td>
+
+          <td>
+
+            <button (click)="edit(item)">
+              Edit
+            </button>
+
+            <button
+              class="delete"
+              (click)="delete(item.id)"
+            >
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

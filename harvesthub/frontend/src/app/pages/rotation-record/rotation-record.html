@@ -1,0 +1,137 @@
+<div class="rotation-container">
+
+  <h1>🔄 Crop Rotation Management</h1>
+
+  <div class="form-card">
+
+    <h2>
+      {{ editingId !== null ? 'Update Rotation Record' : 'Add Rotation Record' }}
+    </h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Field Name</label>
+        <input
+          type="text"
+          [(ngModel)]="rotationRecord.fieldName"
+          placeholder="Enter field name">
+      </div>
+
+      <div class="form-group">
+        <label>Previous Crop</label>
+        <input
+          type="text"
+          [(ngModel)]="rotationRecord.previousCrop"
+          placeholder="Enter previous crop">
+      </div>
+
+      <div class="form-group">
+        <label>Next Crop</label>
+        <input
+          type="text"
+          [(ngModel)]="rotationRecord.nextCrop"
+          placeholder="Enter next crop">
+      </div>
+
+      <div class="form-group">
+        <label>Rotation Date</label>
+        <input
+          type="date"
+          [(ngModel)]="rotationRecord.rotationDate">
+      </div>
+
+      <div class="form-group">
+        <label>Season</label>
+        <input
+          type="text"
+          [(ngModel)]="rotationRecord.season"
+          placeholder="Kharif / Rabi / Zaid">
+      </div>
+
+    </div>
+
+    <div class="button-group">
+
+      <button
+        class="save-btn"
+        (click)="saveRotationRecord()">
+        {{ editingId !== null ? 'Update Record' : 'Add Record' }}
+      </button>
+
+      <button
+        class="reset-btn"
+        (click)="resetForm()">
+        Reset
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Rotation Records</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Field Name</th>
+          <th>Previous Crop</th>
+          <th>Next Crop</th>
+          <th>Rotation Date</th>
+          <th>Season</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let record of rotationRecords">
+
+          <td>{{ record.id }}</td>
+
+          <td>{{ record.fieldName }}</td>
+
+          <td>{{ record.previousCrop }}</td>
+
+          <td>{{ record.nextCrop }}</td>
+
+          <td>{{ record.rotationDate }}</td>
+
+          <td>{{ record.season }}</td>
+
+          <td>
+
+            <button
+              class="edit-btn"
+              (click)="editRotationRecord(record)">
+              Edit
+            </button>
+
+            <button
+              class="delete-btn"
+              (click)="deleteRotationRecord(record.id!)">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <p
+      *ngIf="rotationRecords.length === 0"
+      class="no-data">
+      No rotation records found.
+    </p>
+
+  </div>
+
+</div>

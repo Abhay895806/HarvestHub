@@ -1,0 +1,141 @@
+<div class="container">
+
+  <h1>Maintenance Management</h1>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Maintenance' : 'Add Maintenance' }}</h2>
+
+    <div class="form-grid">
+
+      <input
+        type="text"
+        placeholder="Equipment Name"
+        [(ngModel)]="maintenance.equipmentName"
+      >
+
+      <div class="date-field">
+        <label>Maintenance Date</label>
+        <input
+          type="date"
+          [(ngModel)]="maintenance.maintenanceDate"
+        >
+      </div>
+
+      <div class="date-field">
+        <label>Next Maintenance Date</label>
+        <input
+          type="date"
+          [(ngModel)]="maintenance.nextMaintenanceDate"
+        >
+      </div>
+
+      <input
+        type="text"
+        placeholder="Maintenance Type"
+        [(ngModel)]="maintenance.maintenanceType"
+      >
+
+      <input
+        type="number"
+        placeholder="Cost"
+        [(ngModel)]="maintenance.cost"
+      >
+
+      <input
+        type="text"
+        placeholder="Status"
+        [(ngModel)]="maintenance.status"
+      >
+
+    </div>
+
+    <div class="buttons">
+
+      <button (click)="save()">
+        {{ editing ? 'Update Maintenance' : 'Add Maintenance' }}
+      </button>
+
+      <button
+        *ngIf="editing"
+        class="cancel"
+        (click)="reset()"
+      >
+        Cancel
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Maintenance Records</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Equipment</th>
+            <th>Maintenance Date</th>
+            <th>Next Maintenance</th>
+            <th>Type</th>
+            <th>Cost</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let item of maintenances">
+
+            <td>{{ item.id }}</td>
+            <td>{{ item.equipmentName }}</td>
+            <td>{{ item.maintenanceDate }}</td>
+            <td>{{ item.nextMaintenanceDate }}</td>
+            <td>{{ item.maintenanceType }}</td>
+            <td>₹ {{ item.cost }}</td>
+            <td>{{ item.status }}</td>
+
+            <td class="actions">
+
+              <button
+                class="edit"
+                (click)="edit(item)"
+              >
+                Edit
+              </button>
+
+              <button
+                class="delete"
+                (click)="delete(item.id)"
+              >
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="maintenances.length === 0">
+
+            <td colspan="8" class="no-data">
+              No maintenance records found
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>
