@@ -1,3 +1,4 @@
+
 .home {
   min-height: 100vh;
   background: #f5f7f5;
@@ -43,7 +44,6 @@
   margin-top: 30px;
 }
 
-
 /* Buttons */
 
 .btn {
@@ -64,7 +64,6 @@
   border: 2px solid white;
   color: white;
 }
-
 
 /* Features */
 
@@ -90,6 +89,8 @@
   gap: 20px;
 }
 
+/* Feature Cards */
+
 .feature-card {
   background: white;
   padding: 25px;
@@ -98,19 +99,31 @@
   transition: 0.3s;
 }
 
-.feature-card:hover {
+/* Clickable Cards */
+
+a.feature-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+a.feature-card:hover {
   transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
 .feature-card .icon {
   font-size: 40px;
 }
 
-.feature-card h3 {
+.feature-card h3,
+a.feature-card h3 {
   color: #2e7d32;
 }
 
-.feature-card p {
+.feature-card p,
+a.feature-card p {
   color: #666;
   line-height: 1.5;
 }
@@ -121,6 +134,10 @@
   font-weight: bold;
 }
 
+a.feature-card span {
+  color: #1b5e20;
+  font-weight: bold;
+}
 
 /* How It Works */
 
@@ -161,7 +178,6 @@
   color: #1b5e20;
 }
 
-
 /* CTA */
 
 .cta {
@@ -178,7 +194,6 @@
 .cta p {
   margin-bottom: 25px;
 }
-
 
 /* Responsive */
 

@@ -1,3 +1,4 @@
+
 import { Routes } from '@angular/router';
 
 import { Home } from './pages/home/home';
@@ -16,9 +17,16 @@ import { Expense } from './pages/expense/expense';
 import { Maintenance } from './pages/maintenance/maintenance';
 import { RotationRecord } from './pages/rotation-record/rotation-record';
 
+import { Login } from './pages/login/login';
+import { Register } from './pages/register/register';
+
 export const routes: Routes = [
 
   { path: '', component: Home },
+
+  { path: 'login', component: Login },
+
+  { path: 'register', component: Register },
 
   { path: 'dashboard', component: Dashboard },
 
