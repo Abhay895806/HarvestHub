@@ -1,0 +1,116 @@
+.container {
+  padding: 30px;
+}
+
+h1 {
+  color: #1b5e20;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #2e7d32;
+}
+
+.form-card,
+.table-card {
+  background: white;
+  padding: 25px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  margin-top: 20px;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.date-field label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+}
+
+.buttons {
+  margin-top: 20px;
+}
+
+button {
+  padding: 10px 16px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 5px;
+  background: #2e7d32;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.edit {
+  background: #1565c0;
+}
+
+.delete {
+  background: #c62828;
+}
+
+.cancel {
+  background: #757575;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+th,
+td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.actions {
+  display: flex;
+  gap: 5px;
+}
+
+.no-data {
+  text-align: center;
+  padding: 25px;
+  color: #777;
+}
+
+@media (max-width: 700px) {
+
+  .container {
+    padding: 15px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+}

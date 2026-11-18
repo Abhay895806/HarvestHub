@@ -3,11 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RotationRecord } from '../models/rotation-record';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class RotationRecordService {
-
   private apiUrl = 'http://localhost:8081/rotation';
 
   constructor(private http: HttpClient) {}
@@ -20,27 +17,17 @@ export class RotationRecordService {
     return this.http.get<RotationRecord>(`${this.apiUrl}/id/${id}`);
   }
 
-  add(rotationRecord: RotationRecord): Observable<RotationRecord> {
-    return this.http.post<RotationRecord>(
-      `${this.apiUrl}/add`,
-      rotationRecord
-    );
+  add(record: RotationRecord): Observable<RotationRecord> {
+    return this.http.post<RotationRecord>(`${this.apiUrl}/add`, record);
   }
 
-  update(
-    id: number,
-    rotationRecord: RotationRecord
-  ): Observable<RotationRecord> {
-    return this.http.put<RotationRecord>(
-      `${this.apiUrl}/update/${id}`,
-      rotationRecord
-    );
+  update(id: number, record: RotationRecord): Observable<RotationRecord> {
+    return this.http.put<RotationRecord>(`${this.apiUrl}/update/${id}`, record);
   }
 
   delete(id: number): Observable<string> {
-    return this.http.delete(
-      `${this.apiUrl}/delete/${id}`,
-      { responseType: 'text' }
-    );
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, {
+      responseType: 'text'
+    });
   }
 }

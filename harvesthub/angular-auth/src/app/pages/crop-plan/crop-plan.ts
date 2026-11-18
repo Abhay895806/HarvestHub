@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CropPlanService } from '../../services/crop-plan.service';
@@ -12,7 +12,6 @@ import { CropPlan } from '../../models/crop-plan';
   styleUrl: './crop-plan.css'
 })
 export class CropPlanComponent implements OnInit {
-
   cropPlans: CropPlan[] = [];
 
   cropPlan: CropPlan = {
@@ -25,33 +24,52 @@ export class CropPlanComponent implements OnInit {
 
   editing = false;
   editingId?: number;
+  saving = false;
 
-  constructor(private service: CropPlanService) {}
+  constructor(
+    private service: CropPlanService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.load();
   }
 
   load(): void {
-    this.service.getAll().subscribe(data => {
-      this.cropPlans = data;
+    this.service.getAll().subscribe({
+      next: data => {
+        this.cropPlans = data || [];
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        console.error('Error loading crop plans:', error);
+        this.cropPlans = [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
   save(): void {
-    if (this.editing && this.editingId) {
-      this.service.update(this.editingId, this.cropPlan).subscribe(() => {
-        alert('Crop plan updated successfully');
+    if (this.saving) return;
+
+    this.saving = true;
+
+    const request = this.editing && this.editingId !== undefined
+      ? this.service.update(this.editingId, this.cropPlan)
+      : this.service.add(this.cropPlan);
+
+    request.subscribe({
+      next: () => {
+        alert(this.editing ? 'Crop plan updated successfully' : 'Crop plan added successfully');
         this.reset();
         this.load();
-      });
-    } else {
-      this.service.add(this.cropPlan).subscribe(() => {
-        alert('Crop plan added successfully');
-        this.reset();
-        this.load();
-      });
-    }
+      },
+      error: error => {
+        console.error('Error saving crop plan:', error);
+        alert('Failed to save crop plan');
+        this.saving = false;
+      }
+    });
   }
 
   edit(plan: CropPlan): void {
@@ -68,14 +86,18 @@ export class CropPlanComponent implements OnInit {
   }
 
   delete(id?: number): void {
-    if (!id) return;
+    if (id === undefined || !confirm('Delete this crop plan?')) return;
 
-    if (confirm('Delete this crop plan?')) {
-      this.service.delete(id).subscribe(() => {
+    this.service.delete(id).subscribe({
+      next: () => {
         alert('Crop plan deleted successfully');
         this.load();
-      });
-    }
+      },
+      error: error => {
+        console.error('Error deleting crop plan:', error);
+        alert('Failed to delete crop plan');
+      }
+    });
   }
 
   reset(): void {
@@ -89,5 +111,6 @@ export class CropPlanComponent implements OnInit {
 
     this.editing = false;
     this.editingId = undefined;
+    this.saving = false;
   }
 }

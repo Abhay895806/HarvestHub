@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MaintenanceService } from '../../services/maintenance.service';
@@ -12,7 +12,6 @@ import { Maintenance as MaintenanceModel } from '../../models/maintenance';
   styleUrl: './maintenance.css'
 })
 export class Maintenance implements OnInit {
-
   maintenances: MaintenanceModel[] = [];
 
   maintenance: MaintenanceModel = {
@@ -26,8 +25,12 @@ export class Maintenance implements OnInit {
 
   editing = false;
   editingId?: number;
+  saving = false;
 
-  constructor(private service: MaintenanceService) {}
+  constructor(
+    private service: MaintenanceService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -35,87 +38,74 @@ export class Maintenance implements OnInit {
 
   load(): void {
     this.service.getAll().subscribe({
-      next: (data) => {
-        this.maintenances = data;
+      next: data => {
+        this.maintenances = data || [];
+        this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading maintenance:', error);
+        this.maintenances = [];
+        this.cdr.detectChanges();
       }
     });
   }
 
   save(): void {
+    if (this.saving) return;
 
-    if (this.editing && this.editingId !== undefined) {
+    this.saving = true;
 
-      this.service.update(this.editingId, this.maintenance).subscribe({
-        next: () => {
-          alert('Maintenance updated successfully');
-          this.reset();
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error updating maintenance:', error);
-          alert('Failed to update maintenance');
-        }
-      });
+    const request = this.editing && this.editingId !== undefined
+      ? this.service.update(this.editingId, this.maintenance)
+      : this.service.add(this.maintenance);
 
-    } else {
+    request.subscribe({
+      next: () => {
+        alert(this.editing
+          ? 'Maintenance updated successfully'
+          : 'Maintenance added successfully');
 
-      this.service.add(this.maintenance).subscribe({
-        next: () => {
-          alert('Maintenance added successfully');
-          this.reset();
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error adding maintenance:', error);
-          alert('Failed to add maintenance');
-        }
-      });
-
-    }
+        this.reset();
+        this.load();
+      },
+      error: error => {
+        console.error('Error saving maintenance:', error);
+        alert('Failed to save maintenance');
+        this.saving = false;
+      }
+    });
   }
 
-  edit(maintenance: MaintenanceModel): void {
-
+  edit(item: MaintenanceModel): void {
     this.maintenance = {
-      equipmentName: maintenance.equipmentName,
-      maintenanceDate: maintenance.maintenanceDate,
-      nextMaintenanceDate: maintenance.nextMaintenanceDate,
-      maintenanceType: maintenance.maintenanceType,
-      cost: maintenance.cost,
-      status: maintenance.status
+      equipmentName: item.equipmentName,
+      maintenanceDate: item.maintenanceDate,
+      nextMaintenanceDate: item.nextMaintenanceDate,
+      maintenanceType: item.maintenanceType,
+      cost: item.cost,
+      status: item.status
     };
 
     this.editing = true;
-    this.editingId = maintenance.id;
+    this.editingId = item.id;
   }
 
   delete(id?: number): void {
+    if (id === undefined || !confirm('Delete this maintenance record?')) return;
 
-    if (id === undefined) {
-      return;
-    }
-
-    if (confirm('Delete this maintenance record?')) {
-
-      this.service.delete(id).subscribe({
-        next: () => {
-          alert('Maintenance deleted successfully');
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error deleting maintenance:', error);
-          alert('Failed to delete maintenance');
-        }
-      });
-
-    }
+    this.service.delete(id).subscribe({
+      next: () => {
+        alert('Maintenance deleted successfully');
+        this.load();
+      },
+      error: error => {
+        console.error('Error deleting maintenance:', error);
+        alert('Failed to delete maintenance');
+      }
+    });
   }
 
   reset(): void {
-
     this.maintenance = {
       equipmentName: '',
       maintenanceDate: '',
@@ -127,5 +117,6 @@ export class Maintenance implements OnInit {
 
     this.editing = false;
     this.editingId = undefined;
+    this.saving = false;
   }
 }

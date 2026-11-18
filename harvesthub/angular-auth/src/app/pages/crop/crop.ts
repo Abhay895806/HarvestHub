@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { CropService } from '../../services/crop.service';
 import { Crop as CropModel } from '../../models/crop';
 
@@ -13,7 +12,6 @@ import { Crop as CropModel } from '../../models/crop';
   styleUrl: './crop.css'
 })
 export class Crop implements OnInit {
-
   crops: CropModel[] = [];
 
   crop: CropModel = {
@@ -25,8 +23,12 @@ export class Crop implements OnInit {
 
   editing = false;
   editingId?: number;
+  saving = false;
 
-  constructor(private service: CropService) {}
+  constructor(
+    private service: CropService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadCrops();
@@ -34,85 +36,69 @@ export class Crop implements OnInit {
 
   loadCrops(): void {
     this.service.getAll().subscribe({
-      next: (data) => {
-        this.crops = data;
+      next: data => {
+        this.crops = data || [];
+        this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading crops:', error);
+        this.crops = [];
+        this.cdr.detectChanges();
       }
     });
   }
 
   save(): void {
+    if (this.saving) return;
 
-    if (this.editing && this.editingId !== undefined) {
+    this.saving = true;
 
-      this.service.update(this.editingId, this.crop).subscribe({
-        next: () => {
-          alert('Crop updated successfully');
-          this.reset();
-          this.loadCrops();
-        },
-        error: (error) => {
-          console.error('Error updating crop:', error);
-          alert('Failed to update crop');
-        }
-      });
+    const request = this.editing && this.editingId !== undefined
+      ? this.service.update(this.editingId, this.crop)
+      : this.service.add(this.crop);
 
-    } else {
-
-      this.service.add(this.crop).subscribe({
-        next: () => {
-          alert('Crop added successfully');
-          this.reset();
-          this.loadCrops();
-        },
-        error: (error) => {
-          console.error('Error adding crop:', error);
-          alert('Failed to add crop');
-        }
-      });
-
-    }
+    request.subscribe({
+      next: () => {
+        alert(this.editing ? 'Crop updated successfully' : 'Crop added successfully');
+        this.reset();
+        this.loadCrops();
+      },
+      error: error => {
+        console.error('Error saving crop:', error);
+        alert('Failed to save crop');
+        this.saving = false;
+      }
+    });
   }
 
-  edit(crop: CropModel): void {
-
+  edit(item: CropModel): void {
     this.crop = {
-      cropName: crop.cropName,
-      cropType: crop.cropType,
-      season: crop.season,
-      duration: crop.duration
+      cropName: item.cropName,
+      cropType: item.cropType,
+      season: item.season,
+      duration: item.duration
     };
 
     this.editing = true;
-    this.editingId = crop.id;
+    this.editingId = item.id;
   }
 
   delete(id?: number): void {
+    if (id === undefined || !confirm('Delete this crop?')) return;
 
-    if (id === undefined) {
-      return;
-    }
-
-    if (confirm('Delete this crop?')) {
-
-      this.service.delete(id).subscribe({
-        next: () => {
-          alert('Crop deleted successfully');
-          this.loadCrops();
-        },
-        error: (error) => {
-          console.error('Error deleting crop:', error);
-          alert('Failed to delete crop');
-        }
-      });
-
-    }
+    this.service.delete(id).subscribe({
+      next: () => {
+        alert('Crop deleted successfully');
+        this.loadCrops();
+      },
+      error: error => {
+        console.error('Error deleting crop:', error);
+        alert('Failed to delete crop');
+      }
+    });
   }
 
   reset(): void {
-
     this.crop = {
       cropName: '',
       cropType: '',
@@ -122,5 +108,6 @@ export class Crop implements OnInit {
 
     this.editing = false;
     this.editingId = undefined;
+    this.saving = false;
   }
 }

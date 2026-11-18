@@ -3,11 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Harvest } from '../models/harvest';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class HarvestService {
-
   private apiUrl = 'http://localhost:8081/harvest';
 
   constructor(private http: HttpClient) {}
@@ -25,22 +22,18 @@ export class HarvestService {
   }
 
   update(id: number, harvest: Harvest): Observable<Harvest> {
-    return this.http.put<Harvest>(
-      `${this.apiUrl}/update/${id}`,
-      harvest
-    );
+    return this.http.put<Harvest>(`${this.apiUrl}/update/${id}`, harvest);
   }
 
   delete(id: number): Observable<string> {
-    return this.http.delete(
-      `${this.apiUrl}/delete/${id}`,
-      { responseType: 'text' }
-    );
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, {
+      responseType: 'text'
+    });
   }
 
   search(quality: string): Observable<Harvest[]> {
-    return this.http.get<Harvest[]>(
-      `${this.apiUrl}/search?quality=${quality}`
-    );
+    return this.http.get<Harvest[]>(`${this.apiUrl}/search`, {
+      params: { quality }
+    });
   }
 }

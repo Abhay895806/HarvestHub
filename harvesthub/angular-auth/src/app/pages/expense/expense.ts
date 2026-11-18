@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ExpenseService } from '../../services/expense.service';
@@ -12,7 +12,6 @@ import { Expense as ExpenseModel } from '../../models/expense';
   styleUrl: './expense.css'
 })
 export class Expense implements OnInit {
-
   expenses: ExpenseModel[] = [];
 
   expense: ExpenseModel = {
@@ -24,8 +23,12 @@ export class Expense implements OnInit {
 
   editing = false;
   editingId?: number;
+  saving = false;
 
-  constructor(private service: ExpenseService) {}
+  constructor(
+    private service: ExpenseService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.load();
@@ -33,84 +36,69 @@ export class Expense implements OnInit {
 
   load(): void {
     this.service.getAll().subscribe({
-      next: (data) => {
-        this.expenses = data;
+      next: data => {
+        this.expenses = data || [];
+        this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: error => {
         console.error('Error loading expenses:', error);
+        this.expenses = [];
+        this.cdr.detectChanges();
       }
     });
   }
 
   save(): void {
-    if (this.editing && this.editingId !== undefined) {
+    if (this.saving) return;
 
-      this.service.update(this.editingId, this.expense).subscribe({
-        next: () => {
-          alert('Expense updated successfully');
-          this.reset();
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error updating expense:', error);
-          alert('Failed to update expense');
-        }
-      });
+    this.saving = true;
 
-    } else {
+    const request = this.editing && this.editingId !== undefined
+      ? this.service.update(this.editingId, this.expense)
+      : this.service.add(this.expense);
 
-      this.service.add(this.expense).subscribe({
-        next: () => {
-          alert('Expense added successfully');
-          this.reset();
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error adding expense:', error);
-          alert('Failed to add expense');
-        }
-      });
-
-    }
+    request.subscribe({
+      next: () => {
+        alert(this.editing ? 'Expense updated successfully' : 'Expense added successfully');
+        this.reset();
+        this.load();
+      },
+      error: error => {
+        console.error('Error saving expense:', error);
+        alert('Failed to save expense');
+        this.saving = false;
+      }
+    });
   }
 
-  edit(expense: ExpenseModel): void {
-
+  edit(item: ExpenseModel): void {
     this.expense = {
-      expenseType: expense.expenseType,
-      amount: expense.amount,
-      expenseDate: expense.expenseDate,
-      description: expense.description
+      expenseType: item.expenseType,
+      amount: item.amount,
+      expenseDate: item.expenseDate,
+      description: item.description
     };
 
     this.editing = true;
-    this.editingId = expense.id;
+    this.editingId = item.id;
   }
 
   delete(id?: number): void {
+    if (id === undefined || !confirm('Delete this expense?')) return;
 
-    if (id === undefined) {
-      return;
-    }
-
-    if (confirm('Delete this expense?')) {
-
-      this.service.delete(id).subscribe({
-        next: () => {
-          alert('Expense deleted successfully');
-          this.load();
-        },
-        error: (error) => {
-          console.error('Error deleting expense:', error);
-          alert('Failed to delete expense');
-        }
-      });
-
-    }
+    this.service.delete(id).subscribe({
+      next: () => {
+        alert('Expense deleted successfully');
+        this.load();
+      },
+      error: error => {
+        console.error('Error deleting expense:', error);
+        alert('Failed to delete expense');
+      }
+    });
   }
 
   reset(): void {
-
     this.expense = {
       expenseType: '',
       amount: 0,
@@ -120,5 +108,6 @@ export class Expense implements OnInit {
 
     this.editing = false;
     this.editingId = undefined;
+    this.saving = false;
   }
 }

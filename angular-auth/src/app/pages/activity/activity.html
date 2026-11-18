@@ -1,0 +1,97 @@
+<div class="container">
+
+  <h1>Farm Activities</h1>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Activity' : 'Add Activity' }}</h2>
+
+    <input
+      type="text"
+      placeholder="Activity Name"
+      [(ngModel)]="activity.activityName"
+    >
+
+    <input
+      type="text"
+      placeholder="Field Name"
+      [(ngModel)]="activity.fieldName"
+    >
+
+    <input
+      type="date"
+      [(ngModel)]="activity.activityDate"
+    >
+
+    <textarea
+      placeholder="Description"
+      [(ngModel)]="activity.description"
+    ></textarea>
+
+    <input
+      type="text"
+      placeholder="Status"
+      [(ngModel)]="activity.status"
+    >
+
+    <button (click)="saveActivity()">
+      {{ editing ? 'Update Activity' : 'Add Activity' }}
+    </button>
+
+    <button
+      *ngIf="editing"
+      class="cancel"
+      (click)="resetForm()"
+    >
+      Cancel
+    </button>
+
+  </div>
+
+  <div class="table-card">
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Activity Name</th>
+          <th>Field</th>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let activity of activities">
+
+          <td>{{ activity.id }}</td>
+          <td>{{ activity.activityName }}</td>
+          <td>{{ activity.fieldName }}</td>
+          <td>{{ activity.activityDate }}</td>
+          <td>{{ activity.description }}</td>
+          <td>{{ activity.status }}</td>
+
+          <td>
+            <button (click)="editActivity(activity)">Edit</button>
+
+            <button
+              class="delete"
+              (click)="deleteActivity(activity.id)"
+            >
+              Delete
+            </button>
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>

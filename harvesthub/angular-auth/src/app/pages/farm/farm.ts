@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -27,16 +28,26 @@ export class Farm implements OnInit {
   editing = false;
   editingId?: number;
 
-  constructor(private service: FarmProfileService) {}
+  constructor(
+    private service: FarmProfileService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadFarms();
   }
 
+  // Load all farms
   loadFarms(): void {
     this.service.getAll().subscribe({
       next: (data) => {
-        this.farms = data;
+        console.log('Farm API Data:', data);
+
+        this.farms = data || [];
+
+        console.log('Total Farms:', this.farms.length);
+
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error loading farms:', error);
@@ -44,39 +55,43 @@ export class Farm implements OnInit {
     });
   }
 
+  // Add or Update Farm
   save(): void {
 
     if (this.editing && this.editingId !== undefined) {
 
       this.service.update(this.editingId, this.farm).subscribe({
         next: () => {
-          alert('Farm updated successfully');
+          alert('Farm updated successfully!');
           this.reset();
           this.loadFarms();
         },
         error: (error) => {
           console.error('Error updating farm:', error);
-          alert('Failed to update farm');
+          alert('Failed to update farm!');
         }
       });
 
     } else {
 
       this.service.add(this.farm).subscribe({
-        next: () => {
-          alert('Farm added successfully');
+        next: (response) => {
+          console.log('Farm Added:', response);
+
+          alert('Farm added successfully!');
           this.reset();
           this.loadFarms();
         },
         error: (error) => {
           console.error('Error adding farm:', error);
-          alert('Failed to add farm');
+          alert('Failed to add farm!');
         }
       });
 
     }
   }
 
+  // Edit Farm
   edit(farm: FarmProfile): void {
 
     this.farm = {
@@ -91,28 +106,30 @@ export class Farm implements OnInit {
     this.editingId = farm.id;
   }
 
+  // Delete Farm
   delete(id?: number): void {
 
     if (id === undefined) {
       return;
     }
 
-    if (confirm('Delete this farm?')) {
+    if (confirm('Are you sure you want to delete this farm?')) {
 
       this.service.delete(id).subscribe({
         next: () => {
-          alert('Farm deleted successfully');
+          alert('Farm deleted successfully!');
           this.loadFarms();
         },
         error: (error) => {
           console.error('Error deleting farm:', error);
-          alert('Failed to delete farm');
+          alert('Failed to delete farm!');
         }
       });
 
     }
   }
 
+  // Reset Form
   reset(): void {
 
     this.farm = {
@@ -126,4 +143,5 @@ export class Farm implements OnInit {
     this.editing = false;
     this.editingId = undefined;
   }
+
 }

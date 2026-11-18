@@ -1,0 +1,308 @@
+<div class="field-page">
+
+  <div class="page-header">
+    <h1>🌱 Field Management</h1>
+    <p>Add and manage your field details</p>
+  </div>
+
+
+  <!-- FORM CARD -->
+
+  <div class="form-card">
+
+    <h2>
+      {{ editing ? 'Update Field' : 'Add Field' }}
+    </h2>
+
+    <form (ngSubmit)="save()">
+
+      <div class="form-grid">
+
+
+        <!-- Field Name -->
+
+        <div class="form-group">
+
+          <label>Field Name</label>
+
+          <input
+            type="text"
+            name="fieldName"
+            [(ngModel)]="field.fieldName"
+            placeholder="Enter field name"
+            required>
+
+        </div>
+
+
+        <!-- Area -->
+
+        <div class="form-group">
+
+          <label>Area</label>
+
+          <input
+            type="number"
+            name="area"
+            [(ngModel)]="field.area"
+            placeholder="Enter field area"
+            required>
+
+        </div>
+
+
+        <!-- Soil Type -->
+
+        <div class="form-group">
+
+          <label>Soil Type</label>
+
+          <select
+            name="soilType"
+            [(ngModel)]="field.soilType"
+            required>
+
+            <option value="">
+              Select soil type
+            </option>
+
+            <option value="Alluvial">
+              Alluvial
+            </option>
+
+            <option value="Black">
+              Black
+            </option>
+
+            <option value="Red">
+              Red
+            </option>
+
+            <option value="Loamy">
+              Loamy
+            </option>
+
+            <option value="Sandy">
+              Sandy
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Irrigation Type -->
+
+        <div class="form-group">
+
+          <label>Irrigation Type</label>
+
+          <select
+            name="irrigationType"
+            [(ngModel)]="field.irrigationType"
+            required>
+
+            <option value="">
+              Select irrigation type
+            </option>
+
+            <option value="Drip">
+              Drip
+            </option>
+
+            <option value="Sprinkler">
+              Sprinkler
+            </option>
+
+            <option value="Canal">
+              Canal
+            </option>
+
+            <option value="Tube Well">
+              Tube Well
+            </option>
+
+            <option value="Rainfed">
+              Rainfed
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <!-- Status -->
+
+        <div class="form-group">
+
+          <label>Status</label>
+
+          <select
+            name="status"
+            [(ngModel)]="field.status"
+            required>
+
+            <option value="">
+              Select status
+            </option>
+
+            <option value="Active">
+              Active
+            </option>
+
+            <option value="Inactive">
+              Inactive
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- BUTTONS -->
+
+      <div class="buttons">
+
+        <button
+          type="submit"
+          class="save-btn"
+          [disabled]="saving">
+
+          {{
+            saving
+              ? 'Saving...'
+              : (editing ? 'Update Field' : 'Add Field')
+          }}
+
+        </button>
+
+
+        <button
+          type="button"
+          class="reset-btn"
+          (click)="reset()">
+
+          Reset
+
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <!-- TABLE CARD -->
+
+  <div class="table-card">
+
+    <h2>Field Records</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>ID</th>
+
+            <th>Field Name</th>
+
+            <th>Area</th>
+
+            <th>Soil Type</th>
+
+            <th>Irrigation</th>
+
+            <th>Status</th>
+
+            <th>Actions</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr *ngFor="let field of fields">
+
+            <td>
+              {{ field.id }}
+            </td>
+
+            <td>
+              {{ field.fieldName }}
+            </td>
+
+            <td>
+              {{ field.area }}
+            </td>
+
+            <td>
+              {{ field.soilType }}
+            </td>
+
+            <td>
+              {{ field.irrigationType }}
+            </td>
+
+            <td>
+              {{ field.status }}
+            </td>
+
+
+            <td class="actions">
+
+              <button
+                type="button"
+                class="edit-btn"
+                (click)="edit(field)">
+
+                Edit
+
+              </button>
+
+
+              <button
+                type="button"
+                class="delete-btn"
+                (click)="delete(field.id)">
+
+                Delete
+
+              </button>
+
+            </td>
+
+          </tr>
+
+
+          <!-- No Data -->
+
+          <tr *ngIf="fields.length === 0">
+
+            <td
+              colspan="7"
+              class="no-data">
+
+              No field records found.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

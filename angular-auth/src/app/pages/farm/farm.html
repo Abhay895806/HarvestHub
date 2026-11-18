@@ -1,0 +1,155 @@
+<div class="farm-page">
+
+  <div class="page-header">
+    <h1>🌾 Farm Management</h1>
+    <p>Add and manage your farm details</p>
+  </div>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Farm' : 'Add Farm' }}</h2>
+
+    <form (ngSubmit)="save()">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Farm Name</label>
+          <input
+            type="text"
+            name="farmName"
+            [(ngModel)]="farm.farmName"
+            placeholder="Enter farm name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Owner Name</label>
+          <input
+            type="text"
+            name="ownerName"
+            [(ngModel)]="farm.ownerName"
+            placeholder="Enter owner name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input
+            type="text"
+            name="location"
+            [(ngModel)]="farm.location"
+            placeholder="Enter farm location"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Total Area</label>
+          <input
+            type="number"
+            name="totalArea"
+            [(ngModel)]="farm.totalArea"
+            placeholder="Enter total area"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Area Unit</label>
+          <select
+            name="areaUnit"
+            [(ngModel)]="farm.areaUnit"
+            required>
+
+            <option value="">Select unit</option>
+            <option value="Acre">Acre</option>
+            <option value="Hectare">Hectare</option>
+            <option value="Bigha">Bigha</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="buttons">
+        <button type="submit" class="save-btn">
+          {{ editing ? 'Update Farm' : 'Add Farm' }}
+        </button>
+
+        <button
+          type="button"
+          class="reset-btn"
+          (click)="reset()">
+          Reset
+        </button>
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Farm Records</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Farm Name</th>
+            <th>Owner</th>
+            <th>Location</th>
+            <th>Total Area</th>
+            <th>Unit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let farm of farms">
+
+            <td>{{ farm.id }}</td>
+            <td>{{ farm.farmName }}</td>
+            <td>{{ farm.ownerName }}</td>
+            <td>{{ farm.location }}</td>
+            <td>{{ farm.totalArea }}</td>
+            <td>{{ farm.areaUnit }}</td>
+
+            <td class="actions">
+
+              <button
+                class="edit-btn"
+                (click)="edit(farm)">
+                Edit
+              </button>
+
+              <button
+                class="delete-btn"
+                (click)="delete(farm.id)">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="farms.length === 0">
+
+            <td colspan="7" class="no-data">
+              No farm records found.
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

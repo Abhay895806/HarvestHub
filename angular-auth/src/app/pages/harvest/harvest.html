@@ -1,0 +1,148 @@
+<div class="harvest-container">
+
+  <h1>🌾 Harvest Management</h1>
+
+  <div class="form-card">
+
+    <h2>
+      {{ editingId !== null ? 'Update Harvest' : 'Add Harvest' }}
+    </h2>
+
+    <div class="form-grid">
+
+      <div class="form-group">
+        <label>Harvest Date</label>
+        <input
+          type="date"
+          [(ngModel)]="harvest.harvestDate">
+      </div>
+
+      <div class="form-group">
+        <label>Quantity</label>
+        <input
+          type="number"
+          [(ngModel)]="harvest.quantity"
+          placeholder="Enter quantity">
+      </div>
+
+      <div class="form-group">
+        <label>Unit</label>
+        <input
+          type="text"
+          [(ngModel)]="harvest.unit"
+          placeholder="kg / quintal / ton">
+      </div>
+
+      <div class="form-group">
+        <label>Selling Price</label>
+        <input
+          type="number"
+          [(ngModel)]="harvest.sellingPrice"
+          placeholder="Enter selling price">
+      </div>
+
+      <div class="form-group">
+        <label>Quality</label>
+        <input
+          type="text"
+          [(ngModel)]="harvest.quality"
+          placeholder="Good / Average / Poor">
+      </div>
+
+    </div>
+
+    <div class="button-group">
+
+      <button
+        class="save-btn"
+        (click)="addHarvest()">
+        {{ editingId !== null ? 'Update Harvest' : 'Add Harvest' }}
+      </button>
+
+      <button
+        class="reset-btn"
+        (click)="resetForm()">
+        Reset
+      </button>
+
+    </div>
+
+  </div>
+
+  <div class="search-box">
+
+    <input
+      type="text"
+      [(ngModel)]="searchQuality"
+      placeholder="Search by quality">
+
+    <button (click)="searchHarvest()">
+      Search
+    </button>
+
+    <button
+      class="show-all-btn"
+      (click)="loadHarvests()">
+      Show All
+    </button>
+
+  </div>
+
+  <div class="table-card">
+
+    <h2>Harvest Records</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Date</th>
+          <th>Quantity</th>
+          <th>Unit</th>
+          <th>Selling Price</th>
+          <th>Quality</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+
+        <tr *ngFor="let item of harvests">
+
+          <td>{{ item.id }}</td>
+          <td>{{ item.harvestDate }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.unit }}</td>
+          <td>₹{{ item.sellingPrice }}</td>
+          <td>{{ item.quality }}</td>
+
+          <td>
+
+            <button
+              class="edit-btn"
+              (click)="editHarvest(item)">
+              Edit
+            </button>
+
+            <button
+              class="delete-btn"
+              (click)="deleteHarvest(item.id!)">
+              Delete
+            </button>
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+    <p *ngIf="harvests.length === 0" class="no-data">
+      No harvest records found.
+    </p>
+
+  </div>
+
+</div>

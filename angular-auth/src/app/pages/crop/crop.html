@@ -1,0 +1,152 @@
+<div class="crop-page">
+
+  <div class="page-header">
+    <h1>🌱 Crop Management</h1>
+    <p>Add and manage your crop details</p>
+  </div>
+
+  <div class="form-card">
+
+    <h2>{{ editing ? 'Update Crop' : 'Add Crop' }}</h2>
+
+    <form (ngSubmit)="save()">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Crop Name</label>
+
+          <input
+            type="text"
+            name="cropName"
+            [(ngModel)]="crop.cropName"
+            placeholder="Enter crop name"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Crop Type</label>
+
+          <input
+            type="text"
+            name="cropType"
+            [(ngModel)]="crop.cropType"
+            placeholder="Enter crop type"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Season</label>
+
+          <select
+            name="season"
+            [(ngModel)]="crop.season"
+            required>
+
+            <option value="">Select season</option>
+            <option value="Kharif">Kharif</option>
+            <option value="Rabi">Rabi</option>
+            <option value="Zaid">Zaid</option>
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Duration</label>
+
+          <input
+            type="text"
+            name="duration"
+            [(ngModel)]="crop.duration"
+            placeholder="Example: 120 days"
+            required>
+        </div>
+
+      </div>
+
+      <div class="buttons">
+
+        <button
+          type="submit"
+          class="save-btn">
+          {{ editing ? 'Update Crop' : 'Add Crop' }}
+        </button>
+
+        <button
+          type="button"
+          class="reset-btn"
+          (click)="reset()">
+          Reset
+        </button>
+
+      </div>
+
+    </form>
+
+  </div>
+
+
+  <div class="table-card">
+
+    <h2>Crop Records</h2>
+
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Crop Name</th>
+            <th>Crop Type</th>
+            <th>Season</th>
+            <th>Duration</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let crop of crops">
+
+            <td>{{ crop.id }}</td>
+            <td>{{ crop.cropName }}</td>
+            <td>{{ crop.cropType }}</td>
+            <td>{{ crop.season }}</td>
+            <td>{{ crop.duration }}</td>
+
+            <td class="actions">
+
+              <button
+                class="edit-btn"
+                (click)="edit(crop)">
+                Edit
+              </button>
+
+              <button
+                class="delete-btn"
+                (click)="delete(crop.id)">
+                Delete
+              </button>
+
+            </td>
+
+          </tr>
+
+          <tr *ngIf="crops.length === 0">
+
+            <td colspan="6" class="no-data">
+              No crop records found.
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  </div>
+
+</div>

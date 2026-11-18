@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivityService } from '../../services/activity.service';
@@ -12,9 +12,7 @@ import { Activity } from '../../models/activity';
   styleUrl: './activity.css'
 })
 export class ActivityComponent implements OnInit {
-
   activities: Activity[] = [];
-
   activity: Activity = {
     activityName: '',
     fieldName: '',
@@ -25,70 +23,83 @@ export class ActivityComponent implements OnInit {
 
   editing = false;
   editingId?: number;
+  saving = false;
 
-  constructor(private activityService: ActivityService) {}
+  constructor(
+    private service: ActivityService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     this.loadActivities();
   }
 
   loadActivities(): void {
-    this.activityService.getAll().subscribe(data => {
-      this.activities = data;
+    this.service.getAll().subscribe({
+      next: data => {
+        this.activities = data || [];
+        this.cdr.detectChanges();
+      },
+      error: error => {
+        console.error('Error loading activities:', error);
+        this.activities = [];
+        this.cdr.detectChanges();
+      }
     });
   }
 
   saveActivity(): void {
+    if (this.saving) return;
 
-    if (this.editing && this.editingId) {
+    this.saving = true;
 
-      this.activityService.update(this.editingId, this.activity).subscribe(() => {
-        alert('Activity updated successfully');
+    const request = this.editing && this.editingId !== undefined
+      ? this.service.update(this.editingId, this.activity)
+      : this.service.add(this.activity);
+
+    request.subscribe({
+      next: () => {
+        alert(this.editing ? 'Activity updated successfully' : 'Activity added successfully');
         this.resetForm();
         this.loadActivities();
-      });
-
-    } else {
-
-      this.activityService.add(this.activity).subscribe(() => {
-        alert('Activity added successfully');
-        this.resetForm();
-        this.loadActivities();
-      });
-
-    }
+      },
+      error: error => {
+        console.error('Error saving activity:', error);
+        alert('Failed to save activity');
+        this.saving = false;
+      }
+    });
   }
 
-  editActivity(activity: Activity): void {
-
+  editActivity(item: Activity): void {
     this.activity = {
-      activityName: activity.activityName,
-      fieldName: activity.fieldName,
-      activityDate: activity.activityDate,
-      description: activity.description,
-      status: activity.status
+      activityName: item.activityName,
+      fieldName: item.fieldName,
+      activityDate: item.activityDate,
+      description: item.description,
+      status: item.status
     };
 
     this.editing = true;
-    this.editingId = activity.id;
+    this.editingId = item.id;
   }
 
   deleteActivity(id?: number): void {
+    if (id === undefined || !confirm('Delete this activity?')) return;
 
-    if (!id) return;
-
-    if (confirm('Delete this activity?')) {
-
-      this.activityService.delete(id).subscribe(() => {
+    this.service.delete(id).subscribe({
+      next: () => {
         alert('Activity deleted successfully');
         this.loadActivities();
-      });
-
-    }
+      },
+      error: error => {
+        console.error('Error deleting activity:', error);
+        alert('Failed to delete activity');
+      }
+    });
   }
 
   resetForm(): void {
-
     this.activity = {
       activityName: '',
       fieldName: '',
@@ -99,5 +110,6 @@ export class ActivityComponent implements OnInit {
 
     this.editing = false;
     this.editingId = undefined;
+    this.saving = false;
   }
 }

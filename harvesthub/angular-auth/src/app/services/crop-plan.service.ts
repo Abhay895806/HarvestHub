@@ -3,11 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CropPlan } from '../models/crop-plan';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class CropPlanService {
-
   private apiUrl = 'http://localhost:8081/crop-plan';
 
   constructor(private http: HttpClient) {}
@@ -21,23 +18,16 @@ export class CropPlanService {
   }
 
   add(cropPlan: CropPlan): Observable<CropPlan> {
-    return this.http.post<CropPlan>(
-      `${this.apiUrl}/add`,
-      cropPlan
-    );
+    return this.http.post<CropPlan>(`${this.apiUrl}/add`, cropPlan);
   }
 
   update(id: number, cropPlan: CropPlan): Observable<CropPlan> {
-    return this.http.put<CropPlan>(
-      `${this.apiUrl}/update/${id}`,
-      cropPlan
-    );
+    return this.http.put<CropPlan>(`${this.apiUrl}/update/${id}`, cropPlan);
   }
 
   delete(id: number): Observable<string> {
-    return this.http.delete(
-      `${this.apiUrl}/delete/${id}`,
-      { responseType: 'text' }
-    );
+    return this.http.delete(`${this.apiUrl}/delete/${id}`, {
+      responseType: 'text'
+    });
   }
 }

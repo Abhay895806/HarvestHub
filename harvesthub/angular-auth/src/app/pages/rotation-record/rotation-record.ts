@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RotationRecordService } from '../../services/rotation-record.service';
@@ -12,7 +12,6 @@ import { RotationRecord as RotationRecordModel } from '../../models/rotation-rec
   styleUrl: './rotation-record.css'
 })
 export class RotationRecord implements OnInit {
-
   rotationRecords: RotationRecordModel[] = [];
 
   rotationRecord: RotationRecordModel = {
@@ -24,9 +23,11 @@ export class RotationRecord implements OnInit {
   };
 
   editingId: number | null = null;
+  saving = false;
 
   constructor(
-    private rotationRecordService: RotationRecordService
+    private service: RotationRecordService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -34,17 +35,21 @@ export class RotationRecord implements OnInit {
   }
 
   loadRotationRecords(): void {
-    this.rotationRecordService.getAll().subscribe({
-      next: (data) => {
-        this.rotationRecords = data;
+    this.service.getAll().subscribe({
+      next: data => {
+        this.rotationRecords = data || [];
+        this.cdr.detectChanges();
       },
-      error: (error) => {
-        console.error(error);
+      error: error => {
+        console.error('Error loading rotation records:', error);
+        this.rotationRecords = [];
+        this.cdr.detectChanges();
       }
     });
   }
 
   saveRotationRecord(): void {
+    if (this.saving) return;
 
     if (
       !this.rotationRecord.fieldName ||
@@ -57,40 +62,30 @@ export class RotationRecord implements OnInit {
       return;
     }
 
-    if (this.editingId !== null) {
+    this.saving = true;
 
-      this.rotationRecordService
-        .update(this.editingId, this.rotationRecord)
-        .subscribe({
-          next: () => {
-            alert('Rotation record updated successfully');
-            this.resetForm();
-            this.loadRotationRecords();
-          },
-          error: (error) => {
-            console.error(error);
-          }
-        });
+    const request = this.editingId !== null
+      ? this.service.update(this.editingId!, this.rotationRecord)
+      : this.service.add(this.rotationRecord);
 
-    } else {
+    request.subscribe({
+      next: () => {
+        alert(this.editingId !== null
+          ? 'Rotation record updated successfully'
+          : 'Rotation record added successfully');
 
-      this.rotationRecordService
-        .add(this.rotationRecord)
-        .subscribe({
-          next: () => {
-            alert('Rotation record added successfully');
-            this.resetForm();
-            this.loadRotationRecords();
-          },
-          error: (error) => {
-            console.error(error);
-          }
-        });
-    }
+        this.resetForm();
+        this.loadRotationRecords();
+      },
+      error: error => {
+        console.error('Error saving rotation record:', error);
+        alert('Failed to save rotation record');
+        this.saving = false;
+      }
+    });
   }
 
   editRotationRecord(record: RotationRecordModel): void {
-
     this.editingId = record.id ?? null;
 
     this.rotationRecord = {
@@ -103,23 +98,21 @@ export class RotationRecord implements OnInit {
   }
 
   deleteRotationRecord(id: number): void {
+    if (!confirm('Are you sure you want to delete this record?')) return;
 
-    if (confirm('Are you sure you want to delete this record?')) {
-
-      this.rotationRecordService.delete(id).subscribe({
-        next: () => {
-          alert('Rotation record deleted successfully');
-          this.loadRotationRecords();
-        },
-        error: (error) => {
-          console.error(error);
-        }
-      });
-    }
+    this.service.delete(id).subscribe({
+      next: () => {
+        alert('Rotation record deleted successfully');
+        this.loadRotationRecords();
+      },
+      error: error => {
+        console.error('Error deleting rotation record:', error);
+        alert('Failed to delete rotation record');
+      }
+    });
   }
 
   resetForm(): void {
-
     this.rotationRecord = {
       fieldName: '',
       previousCrop: '',
@@ -129,5 +122,6 @@ export class RotationRecord implements OnInit {
     };
 
     this.editingId = null;
+    this.saving = false;
   }
 }

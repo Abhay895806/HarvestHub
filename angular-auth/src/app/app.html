@@ -1,0 +1,31 @@
+<header class="site-header">
+  <a class="brand" routerLink="/" aria-label="HarvestHub home">
+    <span class="brand-mark">🌱</span>
+    <span>Harvest<span class="brand-light">Hub</span><small>SMART FARM MANAGEMENT</small></span>
+  </a>
+
+  <nav class="nav-links" aria-label="Main navigation">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+    <a routerLink="/farm" routerLinkActive="active">Farm</a>
+    <a routerLink="/field" routerLinkActive="active">Fields</a>
+    <a routerLink="/crop" routerLinkActive="active">Crops</a>
+    <a routerLink="/harvest" routerLinkActive="active">Harvest</a>
+    <a routerLink="/activity" routerLinkActive="active">Activities</a>
+    <a routerLink="/crop-plan" routerLinkActive="active">Crop plans</a>
+    <a routerLink="/equipment" routerLinkActive="active">Equipment</a>
+    <a routerLink="/expense" routerLinkActive="active">Expenses</a>
+    <a routerLink="/maintenance" routerLinkActive="active">Maintenance</a>
+    <a routerLink="/rotation-record" routerLinkActive="active">Rotation</a>
+  </nav>
+  <a class="header-cta" routerLink="/dashboard">Open workspace <span>↗</span></a>
+</header>
+
+<main class="page-shell">
+  <router-outlet></router-outlet>
+</main>
+
+<footer class="site-footer">
+  <span>🌾 HarvestHub</span>
+  <span>Grow smarter. Manage better.</span>
+</footer>
