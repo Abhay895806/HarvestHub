@@ -2,6 +2,7 @@ package com.hcl.harvesthub.controller;
 
 import com.hcl.harvesthub.model.User;
 import com.hcl.harvesthub.service.AuthService;
+import com.hcl.harvesthub.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,9 +14,11 @@ import java.util.Map;
 public class AuthController {
 
     private final AuthService authService;
+    private final JwtService jwtService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthService authService, JwtService jwtService) {
         this.authService = authService;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/register")
@@ -47,7 +50,8 @@ public class AuthController {
             return ResponseEntity.ok(Map.of(
                     "message", "Login successful!",
                     "name", user.getFullName(),
-                    "email", user.getEmail()
+                    "email", user.getEmail(),
+                    "token", jwtService.createToken(user.getEmail())
             ));
 
         } catch (RuntimeException e) {

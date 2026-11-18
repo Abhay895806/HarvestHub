@@ -30,6 +30,7 @@ export class Login {
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
+        this.authService.saveSession(response);
         this.message = response.message;
         alert('Login Successful!');
         this.router.navigate(['/dashboard']);

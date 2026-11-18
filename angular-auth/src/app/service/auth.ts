@@ -18,4 +18,18 @@ export class Auth {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials);
   }
+
+  isAuthenticated(): boolean {
+    return !!localStorage.getItem('harvesthub_token');
+  }
+
+  saveSession(response: any): void {
+    localStorage.setItem('harvesthub_token', response.token);
+    localStorage.setItem('harvesthub_name', response.name);
+  }
+
+  logout(): void {
+    localStorage.removeItem('harvesthub_token');
+    localStorage.removeItem('harvesthub_name');
+  }
 }

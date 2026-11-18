@@ -19,6 +19,7 @@ import { RotationRecord } from './pages/rotation-record/rotation-record';
 
 import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
+import { authGuard } from './service/auth.guard';
 
 export const routes: Routes = [
 
@@ -28,27 +29,27 @@ export const routes: Routes = [
 
   { path: 'register', component: Register },
 
-  { path: 'dashboard', component: Dashboard },
+  { path: 'dashboard', component: Dashboard, canActivate: [authGuard] },
 
-  { path: 'farm', component: Farm },
+  { path: 'farm', component: Farm, canActivate: [authGuard] },
 
-  { path: 'field', component: Field },
+  { path: 'field', component: Field, canActivate: [authGuard] },
 
-  { path: 'crop', component: Crop },
+  { path: 'crop', component: Crop, canActivate: [authGuard] },
 
-  { path: 'harvest', component: Harvest },
+  { path: 'harvest', component: Harvest, canActivate: [authGuard] },
 
-  { path: 'activity', component: ActivityComponent },
+  { path: 'activity', component: ActivityComponent, canActivate: [authGuard] },
 
-  { path: 'crop-plan', component: CropPlanComponent },
+  { path: 'crop-plan', component: CropPlanComponent, canActivate: [authGuard] },
 
-  { path: 'equipment', component: EquipmentComponent },
+  { path: 'equipment', component: EquipmentComponent, canActivate: [authGuard] },
 
-  { path: 'expense', component: Expense },
+  { path: 'expense', component: Expense, canActivate: [authGuard] },
 
-  { path: 'maintenance', component: Maintenance },
+  { path: 'maintenance', component: Maintenance, canActivate: [authGuard] },
 
-  { path: 'rotation-record', component: RotationRecord },
+  { path: 'rotation-record', component: RotationRecord, canActivate: [authGuard] },
 
   { path: '**', redirectTo: '' }
 
