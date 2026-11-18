@@ -33,7 +33,7 @@ jobs:
 
       - name: Build Backend
         working-directory: auth-backend
-        run: mvn clean package
+        run: mvn -U clean package
 
 
   frontend:
