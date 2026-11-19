@@ -18,7 +18,13 @@
     <a routerLink="/maintenance" routerLinkActive="active">Maintenance</a>
     <a routerLink="/rotation-record" routerLinkActive="active">Rotation</a>
   </nav>
-  <a class="header-cta" routerLink="/dashboard">Open workspace <span>↗</span></a>
+  @if (isAuthenticated) {
+    <button class="header-cta header-logout" type="button" (click)="logout()" aria-label="Log out of HarvestHub">
+      Log out <span>↪</span>
+    </button>
+  } @else {
+    <a class="header-cta" routerLink="/login">Sign in <span>↗</span></a>
+  }
 </header>
 
 <main class="page-shell">

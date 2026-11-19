@@ -1,5 +1,6 @@
-import { Component, signal } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Auth } from './service/auth';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,14 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('HarvestHub');
+  constructor(private readonly auth: Auth, private readonly router: Router) {}
+
+  get isAuthenticated(): boolean {
+    return this.auth.isAuthenticated();
+  }
+
+  logout(): void {
+    this.auth.logout();
+    void this.router.navigateByUrl('/login');
+  }
 }
