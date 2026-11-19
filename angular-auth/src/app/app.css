@@ -11,7 +11,7 @@
   background:#e7f3e8; font-size:23px; }
 .brand-light { color:#4d9860; }
 .brand small { display:block; margin-top:4px; color:#8a9b8e; font:700 8px 'DM Sans',sans-serif; letter-spacing:1.25px; }
-.nav-links { display:flex; align-items:center; justify-content:center; gap:4px; flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; }
+.nav-links { display:flex; align-items:center; justify-content:flex-start; gap:4px; flex:1; min-width:0; overflow-x:auto; scrollbar-width:none; }
 .nav-links::-webkit-scrollbar { display:none; }
 .nav-links a { white-space:nowrap; padding:9px 10px; border-radius:9px; color:#607267; text-decoration:none;
   font:600 12px 'DM Sans',sans-serif; transition:background .2s,color .2s; }
