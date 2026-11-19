@@ -32,7 +32,6 @@ export class Login {
       next: (response) => {
         this.authService.saveSession(response);
         this.message = response.message;
-        alert('Login Successful!');
         this.router.navigate(['/dashboard']);
       },
       error: (error) => {
